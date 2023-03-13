@@ -3,9 +3,9 @@ use std::path::PathBuf;
 use anyhow::bail;
 
 pub struct Mountpoint {
-    filesystem: PathBuf,
-    mountpoint: PathBuf,
-    contains_home: bool,
+    pub filesystem: PathBuf,
+    pub mountpoint: PathBuf,
+    pub contains_home: bool,
 }
 
 pub fn mountpoints() -> anyhow::Result<Vec<Mountpoint>> {
