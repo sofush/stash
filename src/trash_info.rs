@@ -69,10 +69,13 @@ impl Entry {
     pub fn from_file(path: &Path) -> anyhow::Result<Entry> {
         let file_contents = std::fs::read_to_string(path)?;
 
-        match Entry::parse(&file_contents) {
-            Some(entry) => Ok(entry),
+        let mut entry = match Entry::parse(&file_contents) {
+            Some(entry) => entry,
             None => bail!(CustomError::TrashInfoParseFailure(path.to_string_lossy().into())),
-        }
+        };
+
+        entry.location = Some(path.to_path_buf());
+        Ok(entry)
     }
 
     pub fn parse(entry: &str) -> Option<Entry> {
