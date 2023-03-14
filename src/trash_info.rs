@@ -115,18 +115,16 @@ impl Entry {
             None => return None,
         };
 
-        let name = path.file_name()?;
+        let stem = path.file_stem()?;
         let root = path.ancestors().nth(2)?;
-        Some(root.join("files").join(name))
+        Some(root.join("files").join(stem))
     }
 
     pub fn missing_file(&self) -> bool {
-        let path = match self.file() {
-            Some(path) => path,
-            None => return false,
-        };
-
-        path.exists()
+        match self.file() {
+            Some(path) => !path.exists(),
+            None => return true,
+        }
     }
 }
 
