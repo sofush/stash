@@ -19,10 +19,7 @@ pub enum Dir {
 impl Dir {
     pub fn new(mountpoint: Rc<Mountpoint>, uid: u32) -> anyhow::Result<Dir> {
         if mountpoint.contains_home {
-            let xdg_data_home = std::env::var("XDG_DATA_HOME")?;
-            let path = PathBuf::from(format!("{xdg_data_home}/Trash"));
-
-            Ok(Dir::Home(mountpoint, path))
+            Ok(Dir::Home(mountpoint, common::get_home_trash_dir()?))
         } else {
             let topdir = mountpoint.mountpoint.clone();
 
