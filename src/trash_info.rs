@@ -7,7 +7,7 @@ const DATETIME_FORMAT: &[FormatItem] = format_description!("[year]-[month]-[day]
 const HEADER: &str = "[Trash Info]";
 
 #[derive(Debug, Clone, PartialEq)]
-struct Values {
+pub struct Values {
     path: String,
     datetime: PrimitiveDateTime,
 }
