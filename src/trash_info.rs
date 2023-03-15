@@ -6,21 +6,21 @@ use crate::errors::CustomError;
 const DATETIME_FORMAT: &[FormatItem] = format_description!("[year]-[month]-[day]T[hour]:[minute]:[second]");
 const HEADER: &str = "[Trash Info]";
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Values {
     path: String,
     datetime: PrimitiveDateTime,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Entry {
     location: Option<PathBuf>,
     values: Values,
 }
 
-impl Into<String> for Entry {
-    fn into(self) -> String {
-        self.to_string()
+impl From<Entry> for String {
+    fn from(entry: Entry) -> Self {
+        entry.to_string()
     }
 }
 
@@ -59,7 +59,7 @@ impl Entry {
         Ok(Entry {
             location: None,
             values: Values {
-                path: path.into(),
+                path,
                 datetime,
             }
         })
@@ -107,7 +107,7 @@ impl Entry {
                     }
                 })
             },
-            _ => return None,
+            _ => None,
         }
     }
 
@@ -125,7 +125,7 @@ impl Entry {
     pub fn missing_file(&self) -> bool {
         match self.file() {
             Some(path) => !path.exists(),
-            None => return true,
+            None => true,
         }
     }
 }
@@ -140,7 +140,6 @@ mod tests {
 
     #[test]
     fn valid_trash_info_entry_parses() -> anyhow::Result<()> {
-        const PATH: &str = "/tmp/testfile";
         const RELATIVE_PATH: &str = "testfile";
 
         let mut rand = rand::thread_rng();

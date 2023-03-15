@@ -78,8 +78,8 @@ impl Dir {
 
         match self {
             Dir::Home(_, home_trash_dir) => {
-                std::fs::create_dir_all(&home_trash_dir)?;
-                self.trash(&abs, &home_trash_dir, trash_mode)
+                std::fs::create_dir_all(home_trash_dir)?;
+                self.trash(&abs, home_trash_dir, trash_mode)
             },
             Dir::Topdir(_, topdirs) => {
                 let shared_parent = topdirs.shared.parent().unwrap();
@@ -90,17 +90,15 @@ impl Dir {
                 dbg!(&is_sticky);
 
                 if !shared_parent.is_symlink() || is_sticky {
-                    if !topdirs.shared.exists() {
-                        if let Ok(_) = std::fs::create_dir(&topdirs.shared) {
-                            self.trash(&abs, &topdirs.shared, trash_mode)?;
-                        }
+                    if !topdirs.shared.exists() && std::fs::create_dir(&topdirs.shared).is_ok(){
+                        self.trash(&abs, &topdirs.shared, trash_mode)?;
                     }
                 } else {
                     // TODO: report the failed check to the administrator
                 }
 
                 if !topdirs.personal.exists() {
-                    if let Err(_) = std::fs::create_dir(&topdirs.personal) {
+                    if std::fs::create_dir(&topdirs.personal).is_err() {
                         let dir_name = topdirs.personal.to_str().unwrap_or("<error>");
                         bail!(CustomError::CreateDirectoryFailed(dir_name.into(), query.into()))
                     }
