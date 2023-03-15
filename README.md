@@ -1,5 +1,9 @@
 # stash - move file(s) to trashcan
 
+This program is an implementation of the [XDG Trash Specification](https://specifications.freedesktop.org/trash-spec/trashspec-latest.html).
+
+## Usage
+
 Trash one or more files or directories:
 
 ```console
