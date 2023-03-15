@@ -10,6 +10,7 @@ anyhow = "1.0.69"
 thiserror = "1.0.39"
 time = { version = "0.3.20", features = ["formatting", "parsing", "macros", "local-offset"] }
 rand = "0.8.5"
+clap = { version = "4.1.8", features = ["derive"] }
 
 [dev-dependencies]
 uuid = { version = "0.8.1", features = ["v4"] }
