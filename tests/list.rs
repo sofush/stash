@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use uuid::Uuid;
-use stash::trash_info::Entry;
+use stash::Entry;
 use std::io::Write;
 
 fn create_test_dir() -> anyhow::Result<PathBuf> {
@@ -32,7 +32,7 @@ mod tests {
     #[test]
     fn listing_directory_with_one_valid_entry_contains_one() -> anyhow::Result<()> {
         let path = create_test_dir()?;
-        let entry = Entry::new(&path, None)?;
+        let entry = Entry::new("relative/path/to/nonexistant/file".into())?;
         let filename = format!("{}.trashinfo", Uuid::new_v4().to_string());
 
         let mut file = std::fs::File::options()

@@ -35,26 +35,25 @@ impl ToString for Entry {
     }
 }
 
-impl Entry {
-    pub fn new(
-        path: &Path, 
-        datetime: Option<PrimitiveDateTime>
-    ) -> anyhow::Result<Entry>{
-        let datetime = match datetime {
-            Some(datetime) => datetime,
-            None => {
-                let tmp = unsafe {
-                    use time::util::local_offset::{self, Soundness};
-                    local_offset::set_soundness(Soundness::Unsound);
-                    OffsetDateTime::now_local()
-                }?;
-                PrimitiveDateTime::new(tmp.date(), tmp.time())
-            },
-        };
+impl From<Values> for Entry {
+    fn from(values: Values) -> Self {
+        Self {
+            location: None,
+            values,
+        }
+    }
+}
 
-        let path = match path.to_str() {
-            Some(path) => path,
-            None => bail!(CustomError::PathInvalidUnicode),
+impl Entry {
+    pub fn new(path: String) -> anyhow::Result<Entry> {
+        let datetime = {
+            let tmp = unsafe {
+                use time::util::local_offset::{self, Soundness};
+                local_offset::set_soundness(Soundness::Unsound);
+                OffsetDateTime::now_local()
+            }?;
+
+            PrimitiveDateTime::new(tmp.date(), tmp.time())
         };
 
         Ok(Entry {
@@ -142,16 +141,20 @@ mod tests {
     #[test]
     fn valid_trash_info_entry_parses() -> anyhow::Result<()> {
         const PATH: &str = "/tmp/testfile";
+        const RELATIVE_PATH: &str = "testfile";
 
         let mut rand = rand::thread_rng();
         let date = Date::from_ordinal_date(rand.gen_range(2000..=2050), rand.gen_range(1..=365))?;
         let time = Time::from_hms(rand.gen_range(0..=23), rand.gen_range(0..=59), rand.gen_range(0..=59))?;
         let datetime = PrimitiveDateTime::new(date, time);
-        let expected = Entry::new(Path::new(PATH), Some(datetime))?;
+        let expected = Entry::from(Values {
+            path: String::from(RELATIVE_PATH),
+            datetime,
+        });
 
         let mut out = String::new();
         writeln!(&mut out, "{HEADER}")?;
-        writeln!(&mut out, "Path={PATH}")?;
+        writeln!(&mut out, "Path={RELATIVE_PATH}")?;
         writeln!(&mut out, "DeletionDate={}", datetime.format(DATETIME_FORMAT)?)?;
 
         assert_eq!(Some(expected), Entry::parse(&out));

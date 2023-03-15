@@ -1,5 +1,5 @@
 [package]
-name = "stash-rs"
+name = "stash"
 version = "0.1.0"
 edition = "2021"
 
@@ -10,6 +10,7 @@ anyhow = "1.0.69"
 thiserror = "1.0.39"
 time = { version = "0.3.20", features = ["formatting", "parsing", "macros", "local-offset"] }
 rand = "0.8.5"
+path-absolutize = "3.0.14"
 clap = { version = "4.1.8", features = ["derive"] }
 
 [dev-dependencies]

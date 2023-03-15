@@ -3,6 +3,7 @@ use crate::errors::CustomError;
 use std::path::PathBuf;
 use anyhow::bail;
 
+#[derive(Debug, Clone)]
 pub struct Mountpoint {
     pub filesystem: PathBuf,
     pub mountpoint: PathBuf,
