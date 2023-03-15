@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use uuid::Uuid;
-use stash_rs::trash_info::Entry;
+use stash::trash_info::Entry;
 use std::io::Write;
 
 fn create_test_dir() -> anyhow::Result<PathBuf> {
@@ -15,14 +15,14 @@ fn create_test_dir() -> anyhow::Result<PathBuf> {
 
 #[cfg(test)]
 mod tests {
-    use stash_rs::list;
+    use stash::list;
 
     use super::*;
 
     #[test]
     fn listing_empty_directory_contains_no_entries() -> anyhow::Result<()> {
         let path = create_test_dir()?;
-        let entries = stash_rs::list(&path)?;
+        let entries = stash::list(&path)?;
 
         assert_eq!(0, entries.len());
 

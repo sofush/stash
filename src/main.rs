@@ -1,6 +1,6 @@
 use anyhow::bail;
 use clap::Parser;
-use stash_rs::list::list_all;
+use stash::list::list_all;
 use thiserror::Error;
 
 #[derive(Parser)]
